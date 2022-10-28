@@ -1,0 +1,12 @@
+.todo-row--pending {
+
+}
+.todo-row--progress {
+    background-color: bisque;
+    color: tan;
+}
+.todo-row--done {
+    background-color: aquamarine;
+    color: darkolivegreen;
+
+}
