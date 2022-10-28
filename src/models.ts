@@ -1,7 +1,7 @@
 export enum Status {
     Pending = 'pending',
-    InProgress = 'In progress',
-    Done = 'Done'
+    InProgress = 'progress',
+    Done = 'finished'
 }
 
 export interface Todo {

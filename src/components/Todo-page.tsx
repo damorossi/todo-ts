@@ -1,34 +1,39 @@
 import { useEffect, useState } from 'react';
-import { Select, Skeleton, Button, Tooltip , Table } from 'antd';
+import { Skeleton, Button, Tooltip , Table, Alert } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
+import { Spin } from 'antd';
 
 import {fetchData, deleteItem } from '../services/client-api.service';
-import { Status, Todo } from '../models';
+import { Todo } from '../models';
 import 'antd/dist/antd.css';
-
-const Option = Select.Option;
-
+import TodoSelectComponent from './Todo-select-component';
 
 function Todos() {
   const [todos, setTodos] = useState<Todo[]>();
+  const [isOkResponse, setResponse] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [responseValue, setResponseValue] = useState(<></>);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalRows, setTotalRows] = useState(0);
+
   useEffect(() => {
-    fetchData('todos', 0).then(res => {
-      if (res.length > 0) {
-        setTodos(res);
+    setIsLoading(true)
+    fetchData('todos', currentPage).then(({data, totalRows}: {data: Todo[], totalRows: number}) => {
+    if (data.length > 0) {
+        setTodos(data);
+        setCurrentPage(+currentPage + 10)
+        setTotalRows(+totalRows)
+        setIsLoading(false);
       }
     });
   }, []);
-
-  interface SelectValueTypes {
-    key: string,
-    value: string,
-    children: string,
-    id: number
+  
+  const handleSucessAction = () => {
+    setResponse(true);
+    setTimeout(() => {
+      setResponse(false);
+    }, 5000);
   }
-  const handleChange = (value: string, obj: unknown) => {
-    const objectFromSelect = obj as SelectValueTypes;
-    console.log(`selected ${value} and ${objectFromSelect.id}`);
-  };
   
   if (todos === undefined)  return <Skeleton />
   
@@ -50,24 +55,11 @@ function Todos() {
     },
   ]
 
-  const options = [
-    { key: Status.Pending, value: 'pending' },
-    { key: Status.InProgress, value: 'pending' },
-    { key: Status.Done, value: 'pending' },
-  ];
-
-  const select = (id: number, title: string, status: Status)  => (
-  <Select defaultValue={status} style={{ width: 120 }} onChange={handleChange}>
-    <Option value={Status.Pending} id={id} key={Status.Pending} >{Status.Pending}</Option>
-    <Option value={Status.InProgress} id={id} key={Status.InProgress} >{Status.InProgress}</Option>
-    <Option value={Status.Done} id={id} key={Status.Done} >{Status.Done}</Option>
-  </Select>
+  const getTodoComponent = ({title, id, status}: Partial<Todo>) => (
+    <TodoSelectComponent onHandleSucessAction={handleSucessAction} title={title!} id={id!} status={status!} />
   );
 
-
-  
   const handleDelete = (id: number) => {
-    console.log('ey', id);
     deleteItem('todos', id);
   }
 
@@ -75,22 +67,26 @@ function Todos() {
      <Tooltip title="search" >
       <Button type="primary" shape="circle" danger icon={<DeleteOutlined />} onClick={() => handleDelete}/>
     </Tooltip>
-  )
+  );
 
   const data = todos.map(({title, status, id}, index) => (
     {
       key: `${index}-${id}-${title}`,
       title,
-      status: select(id, title, status),
+      status: getTodoComponent({id, title, status}),
       id: deleteAction(id)
     }
   ));
-  
+
+  const renderElement = isLoading ? <Spin /> : <Table columns={columns} dataSource={data} pagination={{ pageSize: 5 }} scroll={{ y: 640 }} />;
+  const message = isOkResponse && <Alert message="Element successfully modified" type="success" />;
+  // render
   return (
     <div className="todos-page">
+      {message}
       <h4>Total {todos.length}</h4>
-      <Table columns={columns} dataSource={data} pagination={{ pageSize: 50 }} scroll={{ y: 640 }} />
-   </div>
+      { renderElement  }
+    </div>
   );
 }
 
