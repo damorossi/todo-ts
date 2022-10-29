@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { errorMonitor } from 'events';
+import { ResolvedData } from '../components/Todo-select-component';
 import { Todo } from '../models';
 const BASE_API_URL = 'http://localhost:4000/api';
 interface FetchResult {
@@ -17,7 +19,7 @@ const fetchData = async (url: string, offset: number = 0): Promise<FetchResult>=
     return { data, totalRows};
 }
 
-const updateItem = async (url: string, id: number, body: Partial<Todo>): Promise<Todo> => {
+const updateItem = async (url: string, id: number, body: Partial<Todo>): Promise<ResolvedData> => {
     const endpoint = `${BASE_API_URL}/${url}/${id}`;
     const { title, status } = body;
     const response = await axios.put(
@@ -25,7 +27,17 @@ const updateItem = async (url: string, id: number, body: Partial<Todo>): Promise
          {
             title, status, id
          }
-        ).then(res => res.data);
+        ).then(res => res.data)
+        .catch(function (error) {
+            // const reponseError = {
+            //     msg: error.response.data.msg,
+            //     ok: error.response.data.ok,
+            //     data: []
+            // }
+            // ;
+            // console.log(error.toJSON());
+            return error.response.data;
+        });;
     return response;
 };
 

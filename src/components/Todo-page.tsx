@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { Skeleton, Button, Tooltip , Table, Alert } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
@@ -10,14 +10,17 @@ import TodoSelectComponent from './Todo-select-component';
 
 function Todos() {
   const [todos, setTodos] = useState<Todo[]>();
-  const [isOkResponse, setResponse] = useState(false);
+  // const [isOkResponse, setResponse] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [responseValue, setResponseValue] = useState(<></>);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalRows, setTotalRows] = useState(0);
+  const [showError, setShowError] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    setIsLoading(true)
+    setIsLoading(true);
     fetchData('todos', currentPage).then(({data, totalRows}: {data: Todo[], totalRows: number}) => {
     if (data.length > 0) {
         setTodos(data);
@@ -28,12 +31,24 @@ function Todos() {
     });
   }, []);
   
-  const handleSucessAction = () => {
-    setResponse(true);
+
+  function handleErrorAction(error: SetStateAction<any>): void {
+    setShowError(true);
+    setErrorMessage(error);
     setTimeout(() => {
-      setResponse(false);
-    }, 5000);
+      
+      setShowError(false);
+      setErrorMessage('');
+    }, 3000)
   }
+
+  function handleSucessAction(): void {
+    setShowSuccess(true);
+    setTimeout(() => {
+      setShowSuccess(false);
+    }, 3000);
+  }
+  
   
   if (todos === undefined)  return <Skeleton />
   
@@ -56,7 +71,7 @@ function Todos() {
   ]
 
   const getTodoComponent = ({title, id, status}: Partial<Todo>) => (
-    <TodoSelectComponent onHandleSucessAction={handleSucessAction} title={title!} id={id!} status={status!} />
+    <TodoSelectComponent  onHandleSucessAction={handleSucessAction} onHandleErrorAction={handleErrorAction} title={title!} id={id!} status={status!} />
   );
 
   const handleDelete = (id: number) => {
@@ -79,8 +94,9 @@ function Todos() {
   ));
 
   const renderElement = isLoading ? <Spin /> : <Table columns={columns} dataSource={data} pagination={{ pageSize: 5 }} scroll={{ y: 640 }} />;
-  const message = isOkResponse && <Alert message="Element successfully modified" type="success" />;
-  // render
+  
+  const message = showSuccess ? <Alert message='element has been successfuly set' type='success' /> : showError && <Alert message={errorMessage} type='error' /> ;
+  
   return (
     <div className="todos-page">
       {message}

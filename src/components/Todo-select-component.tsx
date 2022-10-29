@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 import { Status, Todo } from '../models';
-import { Select, Spin } from 'antd';
+import { Select, Spin, Alert } from 'antd';
 import { updateItem } from '../services/client-api.service';
 
 const { Option }= Select;
@@ -13,33 +13,43 @@ interface SelectValueTypes {
 }
 
     
-interface ResolvedData {
+export interface ResolvedData {
   ok: boolean;
-  data?: Todo[];
+  data?: Todo;
   msg?: string;
 }
 
-const TodoSelectComponent = ({title, status, id, onHandleSucessAction}: {title: string; status: Status; id: number, onHandleSucessAction: any}) => {
+type InputProps = {
+  title: string;
+  status: Status;
+  id: number;
+  onHandleSucessAction: () => void;
+  onHandleErrorAction: (error: string) => void;
+}
+
+const TodoSelectComponent = ({title, status, id, onHandleSucessAction, onHandleErrorAction}: InputProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [currentStatus, setStatus] = useState(status);
   const handleChange = (status: Status, obj: unknown) => {
     setIsLoading(true);
     const objectFromSelect = obj as SelectValueTypes;
     objectFromSelect.value = status;
     const body = {title, status, id}
 
-    updateItem('todos', id, body).then((response: ResolvedData | any) => {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
+    updateItem('todos', id, body).then((response: ResolvedData) => {
       if(response.ok) {
-        console.log('ok', response);
+        setStatus(response?.data?.status || currentStatus);
         onHandleSucessAction();
+      } else {
+        debugger
+        onHandleErrorAction(response?.msg!);
       }
+      setIsLoading(false);
     })
   };
 
   const select = () => (
-    <Select defaultValue={status} style={{ width: 120 }}  onChange={handleChange}>
+    <Select defaultValue={currentStatus} style={{ width: 120 }}  onChange={handleChange}>
       <Option value={Status.Pending} id={id} key={Status.Pending} >{Status.Pending}</Option>
       <Option value={Status.InProgress} id={id} key={Status.InProgress} >{Status.InProgress}</Option>
       <Option value={Status.Done} id={id} key={Status.Done} >{Status.Done}</Option>
@@ -48,7 +58,7 @@ const TodoSelectComponent = ({title, status, id, onHandleSucessAction}: {title: 
   
   const spin = () => (<Spin />)
   return (
-    <div>{isLoading ? spin() : select()}</div>
+    <div> {isLoading ? spin() : select()} </div>
   )
 }
 
