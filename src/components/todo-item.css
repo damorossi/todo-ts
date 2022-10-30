@@ -1,0 +1,28 @@
+.todo__item--pending {
+    background-color: #eaeaea;
+}
+
+.todo__item--progress {
+    background-color: #aaeebb;;
+}
+
+.todo__item--finished {
+    background-color: darkseagreen;
+    color: darkgreen;
+    position: relative;
+}
+
+.todo__item--finished::before {
+    background: darkgreen;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+    border-top: solid 1px darkgreen;
+    content: "";
+    height: 1px;
+    left: 1%;
+    position: absolute;
+    top: 24px;
+    width: 98%;
+    z-index: 1;
+}

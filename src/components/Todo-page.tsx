@@ -1,5 +1,5 @@
 import { SetStateAction, useState } from 'react';
-import { Alert } from 'antd';
+import { Alert, message } from 'antd';
 
 // https://ant.design/components/notification/
 import 'antd/dist/antd.css';
@@ -15,8 +15,8 @@ function Todos() {
         setShowError(true);
         setErrorMessage(error);
         setTimeout(() => {
-          setShowError(false);
-          setErrorMessage('');
+          // setShowError(false);
+          // setErrorMessage('');
         }, 3000)
     }
 

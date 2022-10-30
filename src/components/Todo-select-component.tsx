@@ -22,7 +22,7 @@ type InputProps = {
     title: string;
     status: Status;
     id: number;
-    onHandleSucessAction: () => void;
+    onHandleSucessAction: (status: Status) => void;
     onHandleErrorAction: (error: string) => void;
 }
 
@@ -38,7 +38,7 @@ const TodoSelectComponent = ({title, status, id, onHandleSucessAction, onHandleE
         updateItem('todos', id, body).then((response: ResolvedData) => {
             if(response.ok) {
                 setStatus(response?.data?.status || currentStatus);
-                onHandleSucessAction();
+                onHandleSucessAction(response?.data?.status || currentStatus);
             } else {
                 debugger
                 onHandleErrorAction(response?.msg!);
