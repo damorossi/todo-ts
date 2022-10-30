@@ -1,0 +1,30 @@
+[class~='ant-row'] {
+  background: rgba(128, 128, 128, 0.08);
+  border-bottom: solid 1px #eaeaea;
+}
+
+[class~='ant-row']:nth-child(even) {
+    background-color: white;
+    border-top: solid 1px #eaeaea;
+} 
+
+[class~='ant-col'] {
+  border-left: 1px solid lightgray;
+  height: auto;   
+  padding: 10px;
+}
+
+[class~='ant-row'].todo-finished {
+    background-color: pink;
+}
+
+.todos__list-page {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+.todos__table-container {
+    width: 70%;
+}

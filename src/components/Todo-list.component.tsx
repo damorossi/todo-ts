@@ -1,11 +1,12 @@
 import { SetStateAction, useEffect, useState } from 'react';
-import { Skeleton, Button, Tooltip , Table, Alert, Col } from 'antd';
+import { Skeleton, Button, Tooltip , Table, Col, Divider, Row, message, Popconfirm } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
 
 import {fetchData, deleteItem } from '../services/client-api.service';
 import { Todo } from '../models';
 import 'antd/dist/antd.css';
+import './todo-list.css';
 import TodoSelectComponent from './Todo-select-component';
 
 type InputProps = {
@@ -42,24 +43,6 @@ const TodoListComponent = ({ handleSucessAction, handleErrorAction }: InputProps
   
   
   if (todos === undefined)  return <Skeleton />
-  
-  const columns = [
-    {
-      title: 'Title',
-      dataIndex: 'title',
-      key: 'title',
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-    },
-    {
-      title: 'Actions   ',
-      dataIndex: 'id',
-      key: 'id',
-    },
-  ]
 
   const getTodoComponent = ({title, id, status}: Partial<Todo>) => (
     <TodoSelectComponent  onHandleSucessAction={handleParentSuccess} onHandleErrorAction={handleErrorAction} title={title!} id={id!} status={status!} />
@@ -69,26 +52,39 @@ const TodoListComponent = ({ handleSucessAction, handleErrorAction }: InputProps
     deleteItem('todos', id);
   }
 
-  const deleteAction = (id: number) => (
-     <Tooltip title="search" >
-      <Button type="primary" shape="circle" danger icon={<DeleteOutlined />} onClick={() => handleDelete}/>
-    </Tooltip>
+  const deleteButton = (id: number) => (
+    <Popconfirm
+      title="Are you sure to delete this task?"
+      okText="Yes"
+      cancelText="No"
+    >
+      <Tooltip title="search" >
+        <Button type="primary" shape="circle" danger icon={<DeleteOutlined />} onClick={() => handleDelete}/>
+      </Tooltip>
+    </Popconfirm>
   );
 
-  const data = todos.map(({title, status, id}, index) => (
-    {
-      key: `${index}-${id}-${title}`,
-      title,
-      status: getTodoComponent({id, title, status}),
-      id: deleteAction(id)
-    }
+  const renderTable = todos.map(({title, status, id}, indexl ) => (
+    <section className="todos__table-container">
+        <Row>
+          <Col span={6} xs={{ order: 1 }} sm={{ order: 1 }} md={{ order: 1 }} lg={{ order: 1 }} >
+          { title }
+          </Col>
+          <Col span={6} xs={{ order: 2 }} sm={{ order: 2 }} md={{ order: 2 }} lg={{ order: 2 }}>
+            { getTodoComponent({title, id, status}) }
+          </Col>
+          <Col span={6} xs={{ order: 3 }} sm={{ order: 3}} md={{ order: 3 }} lg={{ order: 3 }}>
+            {deleteButton(id)}
+          </Col>
+        </Row>
+      
+    </section>
   ));
-
-  const renderElement = isLoading ? <Spin /> : <Table columns={columns} dataSource={data} pagination={false} scroll={{ y: 640 }} />;
+  
   return (
-    <div className="todos-page">
+    <div className="todos__list-page">
       <h4>Total {todos.length}</h4>
-      { renderElement  }
+        { isLoading ? <Spin /> : renderTable }
     </div>
   );
 }
