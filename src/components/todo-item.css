@@ -1,9 +1,9 @@
 .todo__item--pending {
-    background-color: #eaeaea;
+    background-color: #FEB281;
 }
 
 .todo__item--progress {
-    background-color: #aaeebb;;
+    background-color: #ECF9F2;
 }
 
 .todo__item--finished {
@@ -19,10 +19,14 @@
     border-right: none;
     border-top: solid 1px darkgreen;
     content: "";
-    height: 1px;
+    height: 2px;
     left: 1%;
     position: absolute;
-    top: 24px;
+    top: 26px;
     width: 98%;
     z-index: 1;
+}
+
+[class~='ant-col']:nth-child(1) {
+    padding-top: 13px;
 }

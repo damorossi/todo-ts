@@ -3,6 +3,7 @@ import { Alert, message } from 'antd';
 
 // https://ant.design/components/notification/
 import 'antd/dist/antd.css';
+import './todo-page.css';
 
 
 import TodoListComponent from './Todo-list.component';
@@ -15,8 +16,8 @@ function Todos() {
         setShowError(true);
         setErrorMessage(error);
         setTimeout(() => {
-          // setShowError(false);
-          // setErrorMessage('');
+          setShowError(false);
+          setErrorMessage('');
         }, 3000)
     }
 

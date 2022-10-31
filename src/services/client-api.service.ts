@@ -19,24 +19,30 @@ const fetchData = async (url: string, offset: number = 0): Promise<FetchResult>=
 }
 
 const updateItem = async (url: string, id: number, body: Partial<Todo>): Promise<ResolvedData> => {
-   
     const endpoint = `${BASE_API_URL}/${url}/${id}`;
     const { title, status } = body;
     const response = await axios.put(
         endpoint,
          {
-            title, status, id
+            title,
+            status,
+            id
          }
         ).then(res => res.data)
         .catch(function (error) {
             return error.response.data;
-        });;
+        });
     return response;
 };
 
 const deleteItem = async (url: string, id: number): Promise<Todo> => {
     const endpoint = `${BASE_API_URL}/${url}/${id}`;
-    const response = await axios.delete(endpoint).then(res => res.data);
+    const response = await axios.delete(endpoint)
+        .then(res => res.data)
+        .catch(function (error) {
+            return error.response.data;
+            }
+        );
     return response.data.ok;
 };
 

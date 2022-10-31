@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Skeleton } from 'antd';
+import { Pagination, Skeleton } from 'antd';
 import { Spin } from 'antd';
 
-import {fetchData, deleteItem } from '../services/client-api.service';
 import { Todo } from '../models';
+import TodoItemComponent from './Todo-item.component';
+import {fetchData } from '../services/client-api.service';
+
 import 'antd/dist/antd.css';
 import './todo-list.css';
-import TodoItemComponent from './Todo-item.component';
 
 type InputProps = {
   handleSucessAction: () => void;
@@ -14,25 +15,15 @@ type InputProps = {
 }
 
 const TodoListComponent = ({ handleSucessAction, handleErrorAction }: InputProps) => {
+    const PAGE_SIZE = 5;
     const [todos, setTodos] = useState<Todo[]>();
-    const [currentPage, setCurrentPage] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
    
     useEffect(() => {
         setIsLoading(true);
-        setTimeout(() => {
-            fetchData('todos', currentPage).then(({data, totalRows}: {data: Todo[], totalRows: number}) => {
-            if (data.length > 0) {
-                setTodos(data);
-                setCurrentPage(+currentPage + 10);
-                setTotalRows(+totalRows);
-                setIsLoading(false);
-            }
-
-            setIsLoading(false);
-            });
-    }, 500);
+        handleFetch(1);
     }, [setIsLoading, totalRows, currentPage]);
   
   
@@ -46,11 +37,42 @@ const TodoListComponent = ({ handleSucessAction, handleErrorAction }: InputProps
         handleParentError={handleErrorAction} key={`${title}-${id}-${index}`}/>
       ));
     
+    function handlePagination (page: number): void {
+        setIsLoading(true);
+        setCurrentPage(+currentPage);
+        setTotalRows(+totalRows);
+        handleFetch(page);
+      
+    };
+
+    function handleFetch(page: number) {
+        setTimeout(() => {
+            fetchData('todos', (page * 5) / 2).then(({data, totalRows}: {data: Todo[], totalRows: number}) => {
+            if (data.length > 0) {
+                setTodos(data);
+                setCurrentPage(+currentPage);
+                setTotalRows(+totalRows);
+                setIsLoading(false);
+            }
+          });
+          setIsLoading(false);
+      }, 500);
+    }
+    
+    const spinner = (<div className="todos__spinner">
+      <Spin />
+    </div>)
+
     return (
         <div className="todos__list-page">
             <h4>Total {todos.length}</h4>
             <section className="todos__table-container">
-              { isLoading ? <Spin /> : table }
+              <div className="todos__table">
+                { isLoading ? spinner : table }
+              </div>
+              <nav>
+                <Pagination defaultCurrent={currentPage} total={20} onChange={handlePagination} />
+              </nav>
             </section>
         </div>
     );
