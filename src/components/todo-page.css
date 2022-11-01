@@ -1,4 +1,5 @@
-.ant-alert{
+.ant-alert {
+    -webkit-animation: bar 1s ease;
     -webkit-box-shadow: 0px 0px 5px 3px rgba(54,0,23,0.5);
     -moz-box-shadow: 0px 0px 5px 3px rgba(54,0,23,0.5);
     box-shadow: 0px 0px 5px 3px rgba(54,0,23,0.5);
@@ -8,15 +9,26 @@
     top: 10px;
     width: 300px;
     z-index: 2;
-    -webkit-animation: bar 1s ease;
+}
+
+.todos-page {
+    display: flex;
+    border: solid;
+    flex-direction: column;
+    padding: 40px;
+    width: 570px;
+}
+
+.todo__ceate-button {
+    align-self: flex-end;
 }
 
 @keyframes bar
 {
-  0% {
-    top: 20%;
-  }
-  100% {
-    top: 3%;
-  }
+    0% {
+        top: 20%;
+    }
+    100% {
+        top: 3%;
+    }
 }

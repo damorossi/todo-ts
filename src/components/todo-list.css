@@ -28,11 +28,12 @@
 
 .todos__table-container {
     -webkit-animation: bar 1s ease;
+    align-items: center;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
     min-height: 400px;
-    width: 70%;
+    width: 100%;
 }
 
 .todos__spinner {

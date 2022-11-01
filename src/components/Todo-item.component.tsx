@@ -47,13 +47,13 @@ const TodoItemComponent = ({title, id, status, handleParentSuccess, handleParent
     const section = (
         <div className={`todo__item--${currentStatus}`}>
             <Row>
-                <Col span={6}  >
+                <Col span={13}  >
                    { title }
                 </Col>
-                <Col span={6} >
+                <Col span={8} >
                    { todoSelect }
                 </Col>
-                <Col span={6}>
+                <Col span={1}>
                     {deleteButton}
                 </Col>
             </Row>

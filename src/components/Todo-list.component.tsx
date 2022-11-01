@@ -15,7 +15,6 @@ type InputProps = {
 }
 
 const TodoListComponent = ({ handleSucessAction, handleErrorAction }: InputProps) => {
-    const PAGE_SIZE = 5;
     const [todos, setTodos] = useState<Todo[]>();
     const [currentPage, setCurrentPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
@@ -65,7 +64,7 @@ const TodoListComponent = ({ handleSucessAction, handleErrorAction }: InputProps
 
     return (
         <div className="todos__list-page">
-            <h4>Total {todos.length}</h4>
+            <h4>Administrate your todo-list</h4>
             <section className="todos__table-container">
               <div className="todos__table">
                 { isLoading ? spinner : table }
