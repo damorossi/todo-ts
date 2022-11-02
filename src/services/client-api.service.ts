@@ -1,12 +1,11 @@
 import axios from 'axios';
-import { ResolvedData } from '../components/Todo-select-component';
-import { Status, Todo } from '../models';
+import { ResolvedData, Status, Todo } from '../models';
 const BASE_API_URL = 'http://localhost:4000/api';
 interface FetchResult {
     data: Todo[];
     totalRows: number;
 }
-const fetchData = async (url: string, offset: number = 0): Promise<FetchResult>=> {
+const fetchData = async (url: string, offset: number = 0): Promise<FetchResult> => {
     let pagination = '';
 
     if (offset > 0) {
@@ -14,8 +13,8 @@ const fetchData = async (url: string, offset: number = 0): Promise<FetchResult>=
     }
     const endpoint = `${BASE_API_URL}/todos/${pagination}`;
     const response = await axios.get(endpoint)
-    const {data, totalRows} = response.data;
-    return { data, totalRows};
+    const { data, totalRows } = response.data;
+    return { data, totalRows };
 }
 
 const updateItem = async (url: string, id: number, body: Partial<Todo>): Promise<ResolvedData> => {
@@ -23,12 +22,12 @@ const updateItem = async (url: string, id: number, body: Partial<Todo>): Promise
     const { title, status } = body;
     const response = await axios.put(
         endpoint,
-         {
+        {
             title,
             status,
             id
-         }
-        ).then(res => res.data)
+        }
+    ).then(res => res.data)
         .catch(function (error) {
             return error.response.data;
         });
@@ -41,7 +40,7 @@ const deleteItem = async (url: string, id: number): Promise<Todo> => {
         .then(res => res.data)
         .catch(function (error) {
             return error.response.data;
-            }
+        }
         );
     return response.data.ok;
 };

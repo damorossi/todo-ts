@@ -1,17 +1,12 @@
 import { useState } from 'react'
 import { Button, Form, Input, Spin } from 'antd';
+
 import { createItem } from '../services/client-api.service';
-import { ResolvedData } from './Todo-select-component';
+import { PropsFormInput, ResolvedData } from '../models';
+
 import './todo-create.css';
 
 type LayoutType = Parameters<typeof Form>[0]['layout'];
-
-
-interface PropsFormInput {
-    handleSucessAction: (refreshList: boolean) => void;
-    handleCancelAction: () => void;
-    handleErrorAction: (error: string) => void;
-}
 
 function TodoFormComponent({handleSucessAction, handleCancelAction, handleErrorAction }: PropsFormInput)  {
     const [form] = Form.useForm();
@@ -39,8 +34,7 @@ function TodoFormComponent({handleSucessAction, handleCancelAction, handleErrorA
 
     return (
         <section>
-            { isLoading ? <Spin /> :
-             
+            { isLoading ? <Spin /> :          
                 <Form
                     layout={formLayout}
                     form={form}

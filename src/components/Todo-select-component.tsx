@@ -1,22 +1,9 @@
 import { useState } from 'react'
-import { Status, Todo } from '../models';
+import { ResolvedData, SelectValueTypes, Status } from '../models';
 import { Select, Spin } from 'antd';
 import { updateItem } from '../services/client-api.service';
 
-const { Option }= Select;
-
-interface SelectValueTypes {
-    key: string,
-    value: string,
-    children: string,
-    id: number
-}
-        
-export interface ResolvedData {
-    ok: boolean;
-    data?: Todo ;
-    msg?: string;
-}
+const { Option } = Select;
 
 type InputProps = {
     title: string;
