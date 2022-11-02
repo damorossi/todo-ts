@@ -1,39 +1,66 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
+import { Button, Form, Input, Spin } from 'antd';
+import { createItem } from '../services/client-api.service';
+import { ResolvedData } from './Todo-select-component';
+import './todo-create.css';
+
+type LayoutType = Parameters<typeof Form>[0]['layout'];
+
 
 interface PropsFormInput {
-    handleSucessAction: () => void;
+    handleSucessAction: (refreshList: boolean) => void;
     handleCancelAction: () => void;
+    handleErrorAction: (error: string) => void;
 }
 
-function TodoFormComponent({handleSucessAction, handleCancelAction }: PropsFormInput)  {
-    const [title, setTitle] = useState('');
+function TodoFormComponent({handleSucessAction, handleCancelAction, handleErrorAction }: PropsFormInput)  {
+    const [form] = Form.useForm();
+    const [formLayout, setFormLayout] = useState<LayoutType>('vertical');
+    const [isLoading, setIsLoading] = useState(false);
 
-    function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-        setTitle(event.target.value);
-    }
+    const onFormLayoutChange = (form: any) => {
+        setFormLayout(form);
+    };
+
+    const onFinish = (values: {}) => {
+        setIsLoading(true);
+        createItem('todos', values).then((response: ResolvedData) => {
+            if(response.ok) {
+                handleSucessAction(true);
+            } else {
+                handleErrorAction('Something went wrong. Please review the data');
+            }
+            setIsLoading(false);
+        }).catch(error => {
+            handleErrorAction(error.msg);
+            setIsLoading(false);
+        })
+    };
 
     return (
-        <section>a
-            {title}
-            <form onSubmit={console.log}>
-                <fieldset>
-                    <p>
-                        <input
-                            type="text"
-                            placeholder="Title"
-                            name="title"
-                            className="loginComponent-inputText"
-                            autoComplete="off"
-                            value={title}
-                            onChange={(e) => handleChange(e)}
-                            />
-                        <label htmlFor="title">Title</label>
-                    </p>
-
-                    <button type="submit">Create Task</button>
-                    <button type="button" onClick={handleCancelAction}>Cancel</button>
-                </fieldset>
-            </form>ss
+        <section>
+            { isLoading ? <Spin /> :
+             
+                <Form
+                    layout={formLayout}
+                    form={form}
+                    initialValues={{ layout: formLayout }}
+                    onValuesChange={onFormLayoutChange}
+                    onFinish={onFinish}
+                >
+                    <Form.Item label="Todo"  name="title" rules={[{ required: true }]}>
+                        <Input placeholder="input placeholder" />
+                    </Form.Item>
+                    <Form.Item >
+                        <Button type="primary" htmlType="submit">
+                            Submit
+                        </Button>
+                        <Button type="primary" onClick={ handleCancelAction }>
+                            Cancel
+                        </Button>
+                    </Form.Item>
+                </Form>
+            }
         </section>
     )
 }

@@ -1,0 +1,15 @@
+.ant-form [class~='ant-form-item'] {
+    margin-bottom: 0;
+    border: none;
+    margin-right: 10px;
+}
+
+[class~='ant-row'] {
+    background: none;
+}
+.ant-form [class~='ant-form-item-row'], .ant-form [class~='ant-col'] {
+    border: none;
+}
+.ant-form [class~='ant-form-item'] button {
+    margin-right: 10px;
+}

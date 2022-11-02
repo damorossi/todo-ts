@@ -14,7 +14,7 @@ interface SelectValueTypes {
         
 export interface ResolvedData {
     ok: boolean;
-    data?: Todo;
+    data?: Todo ;
     msg?: string;
 }
 

@@ -9,13 +9,11 @@ import TodoFormComponent from './Todo-form.component';
 import 'antd/dist/antd.css';
 import './todo-page.css';
 
-
-
 function Todos() {
-  const [showError, setShowError] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [createTodo, setCreateTodo] = useState(false);
+    const [showError, setShowError] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [createTodo, setCreateTodo] = useState(false);
 
     function handleErrorAction(error: SetStateAction<string>): void {
         setShowError(true);
@@ -23,22 +21,25 @@ function Todos() {
         setTimeout(() => {
           setShowError(false);
           setErrorMessage('');
-        }, 3000)
+        }, 1200);
     }
 
-    function handleSucessAction(): void {
+    function handleSucessAction(refreshList: boolean): void {
       setShowSuccess(true);
+      setCreateTodo(false);
       setTimeout(() => {
         setShowSuccess(false);
-      }, 3000);
+      }, 1200);
     }
 
     function handleCancelAction() {
-      setCreateTodo(false);
+      setTimeout(() => {
+        setCreateTodo(false);
+      }, 300);
     }
 
   const message = showSuccess ? <Alert message='element has been successfuly set' type='success' /> : showError && <Alert message={errorMessage} type='error' /> ;
-  const renderElement = <TodoListComponent handleSucessAction={ () => handleSucessAction()  } handleErrorAction={(error) => handleErrorAction(error) } />;
+  const renderTodoList = <TodoListComponent handleSucessAction={ (refreshList) => handleSucessAction(refreshList)} handleErrorAction={(error) => handleErrorAction(error) } />;
  
   return (
     <div className="todos-page">
@@ -51,7 +52,13 @@ function Todos() {
         </div>
       }
       { ( showError || showSuccess) && message }
-      {createTodo ? <TodoFormComponent handleCancelAction={handleCancelAction} handleSucessAction={ () => handleSucessAction()  } /> : renderElement}
+      {createTodo ?
+          <TodoFormComponent
+              handleErrorAction={(error) => handleErrorAction(error)}
+              handleCancelAction={handleCancelAction} handleSucessAction={ (refreshList) => handleSucessAction(refreshList)  }
+          /> :
+          renderTodoList
+      }
     </div>
   );
 }

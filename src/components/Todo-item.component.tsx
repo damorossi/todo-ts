@@ -11,7 +11,7 @@ import './todo-list.css';
 import './todo-item.css';
 
 interface InputPropFn {
-    handleParentSuccess: () => void;
+    handleParentSuccess: (shouldRefreshList: boolean) => void;
     handleParentError: (error: string) => void;
     title: string;
     id: number;
@@ -21,16 +21,24 @@ interface InputPropFn {
 const TodoItemComponent = ({title, id, status, handleParentSuccess, handleParentError}: InputPropFn ) => {
   const [currentStatus, setCurrentStatus] = useState(status); 
   const handleDelete = () => {
-    deleteItem('todos', id);
+    deleteItem('todos', id).then(() => {
+        onHandleSuccess(true)
+    }).catch(() => {
+        handleParentError('Something went wrong, please contact Administrator');
+
+    });
   }
 
-  function onHandleSuccess(status: Status): void {
-    setCurrentStatus(status);
-    handleParentSuccess();
-  }
-
-  const todoSelect =  (
-        <TodoSelectComponent  onHandleSucessAction={onHandleSuccess} onHandleErrorAction={handleParentError} title={title!} id={id!} status={status!} />
+  function onHandleSuccess(shouldRefreshList: boolean): void {
+      handleParentSuccess(shouldRefreshList);
+    }
+    
+    function onHandleSuccessUpdate(status: Status): void {
+        setCurrentStatus(status);
+        onHandleSuccess(false);
+    }
+  const todoSelect = (
+        <TodoSelectComponent  onHandleSucessAction={(shouldRefreshList) => onHandleSuccessUpdate(shouldRefreshList)} onHandleErrorAction={handleParentError} title={title!} id={id!} status={status!} />
     );
 
     const deleteButton = (
@@ -60,9 +68,9 @@ const TodoItemComponent = ({title, id, status, handleParentSuccess, handleParent
         </div>
     )
 
-  return (
-    <> { section }</>
-  )
+    return (
+        <> { section }</>
+    )
 }
 
 export default TodoItemComponent;

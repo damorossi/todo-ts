@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ResolvedData } from '../components/Todo-select-component';
-import { Todo } from '../models';
+import { Status, Todo } from '../models';
 const BASE_API_URL = 'http://localhost:4000/api';
 interface FetchResult {
     data: Todo[];
@@ -46,4 +46,18 @@ const deleteItem = async (url: string, id: number): Promise<Todo> => {
     return response.data.ok;
 };
 
-export { fetchData, updateItem, deleteItem };
+const createItem = async (url: string, body: Partial<Todo>): Promise<ResolvedData> => {
+    const todo = {
+        title: body.title,
+        status: Status.Pending
+    }
+    const endpoint = `${BASE_API_URL}/${url}`;
+    const response = await axios.post(
+        endpoint, todo).then(res => res.data)
+        .catch(function (error) {
+            return error.response.data;
+        });
+    return response;
+};
+
+export { fetchData, updateItem, deleteItem, createItem };
