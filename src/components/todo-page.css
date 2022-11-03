@@ -13,7 +13,6 @@
 
 .todos-page {
     display: flex;
-    border: solid;
     flex-direction: column;
     padding: 40px;
     width: 570px;

@@ -1,3 +1,7 @@
+.todo__item span {
+    cursor: pointer;
+}
+
 .todo__item--pending {
     background-color: #FEB281;
 }

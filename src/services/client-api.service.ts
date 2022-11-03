@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ResolvedData, Status, Todo } from '../models';
-const BASE_API_URL = 'http://localhost:4000/api/';
+const BASE_API_URL = 'http://localhost:4000/api';
 
 interface FetchResult {
     data: Todo[];

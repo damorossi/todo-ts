@@ -20,12 +20,10 @@ function TodoFormComponent({handleSucessAction, handleCancelAction, handleErrorA
 
     const updateElement = (updatedTodo: any) => {
         let body = {...updatedTodo};
-        debugger;
         updateItem('todos', updatedTodo?.id!, body).then((response: ResolvedData) => {
             if(response.ok) {
                 handleSucessAction(true); 
             } else {
-                debugger
                 handleErrorAction(response?.msg!);
             }
             setIsLoading(false);
@@ -34,7 +32,6 @@ function TodoFormComponent({handleSucessAction, handleCancelAction, handleErrorA
 
     const onFinish = (values: {title: string}) => {
         if(todo) {
-            debugger;
             let newTodo = {...todo};
             newTodo.title = values.title;
             updateElement(newTodo);
@@ -56,9 +53,9 @@ function TodoFormComponent({handleSucessAction, handleCancelAction, handleErrorA
             })
         }
     };
-
+    const classFormContainer = todo ? 'form__container--modal' : 'form__container';
     return (
-        <section>
+        <section className={classFormContainer}>
             { isLoading ? <Spin /> :          
                 <Form
                     layout={formLayout}
@@ -74,7 +71,7 @@ function TodoFormComponent({handleSucessAction, handleCancelAction, handleErrorA
                         <Button type="primary" htmlType="submit">
                             Submit
                         </Button>
-                        <Button type="primary" onClick={ handleCancelAction }>
+                        <Button type="primary" onClick={ handleCancelAction } danger>
                             Cancel
                         </Button>
                     </Form.Item>

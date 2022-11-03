@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Col, Row, Popconfirm } from 'antd';
+import { Button, Col, Row, Popconfirm , Tooltip} from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 
 import { deleteItem } from '../services/client-api.service';
@@ -69,11 +69,13 @@ const TodoItemComponent = ({title, id, status, handleParentSuccess, handleParent
               handleCancelAction={() => setEditTodo(false)} handleSucessAction={(val)=> handleUpdateSuccess() }
           />;
     const section = (
-        <div className={`todo__item--${currentStatus}`}>
+        <div className={`todo__item todo__item--${currentStatus}`}>
             <Row>
                 <Col span={10}  >
                     {editTodo ? form : 
-                        <span onDoubleClick={ handleDoubleClick } >{ title }</span>
+                         <Tooltip placement="left" title="Double click to Edit">
+                            <span onDoubleClick={ handleDoubleClick } >{ title }</span>
+                        </Tooltip>
                     }
                 </Col>
                 <Col span={10} >

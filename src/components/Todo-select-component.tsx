@@ -27,7 +27,6 @@ const TodoSelectComponent = ({title, status, id, onHandleSucessAction, onHandleE
                 setStatus(response?.data?.status || currentStatus);
                 onHandleSucessAction(response?.data?.status || currentStatus);
             } else {
-                debugger
                 onHandleErrorAction(response?.msg!);
             }
             setIsLoading(false);
