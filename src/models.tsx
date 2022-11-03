@@ -6,10 +6,8 @@ export enum Status {
 
 export interface Todo {
     title: string;
-    id: number;
+    id?: number;
     status: Status;
-    complete: boolean;
-    userid: number
 }
 
 export interface ResolvedData {
@@ -19,7 +17,7 @@ export interface ResolvedData {
 }
 
 export interface PropsFormInput {
-    todo?: Partial<Todo>;
+    todo?: Todo;
     handleSucessAction: (refreshList: boolean) => void;
     handleCancelAction: () => void;
     handleErrorAction: (error: string) => void;

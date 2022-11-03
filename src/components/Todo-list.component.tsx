@@ -14,7 +14,7 @@ type InputProps = {
 	handleErrorAction: (error: string) => void;
 }
 
-const TodoListComponent = ({ handleSucessAction, handleErrorAction }: InputProps) => {
+const TodoListComponent = ({ handleErrorAction }: InputProps) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [currentPage, setCurrentPage] = useState(0);
 	const [totalRows, setTotalRows] = useState(0);
@@ -59,7 +59,7 @@ const TodoListComponent = ({ handleSucessAction, handleErrorAction }: InputProps
 		return <Skeleton />
 	}
 
-	const table = todos.map(({title, status, id}: Partial<Todo>, index ) => (
+	const table = todos.map(({title, status, id}: Todo, index ) => (
 		<TodoItemComponent title={title!}
 			status={status!}
 			id={id!}
@@ -80,7 +80,7 @@ const TodoListComponent = ({ handleSucessAction, handleErrorAction }: InputProps
 				{ isLoading ? spinner : table }
 				</div>
 				<nav>
-				<Pagination defaultCurrent={currentPage} total={Math.ceil(totalRows) * 2} onChange={handlePagination} />
+					<Pagination defaultCurrent={currentPage} total={Math.ceil(totalRows) * 2} onChange={handlePagination} />
 				</nav>
 			</section>
 		</div>

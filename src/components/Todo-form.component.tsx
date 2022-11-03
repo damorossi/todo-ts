@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Button, Form, Input, Spin } from 'antd';
 
 import { createItem, updateItem } from '../services/client-api.service';
-import { PropsFormInput, ResolvedData, Todo } from '../models';
+import { PropsFormInput, ResolvedData, Status, Todo } from '../models';
 
 import './todo-create.css';
 
@@ -42,7 +42,8 @@ function TodoFormComponent({handleSucessAction, handleCancelAction, handleErrorA
 
         setIsLoading(true);
         if(!todo) {
-            createItem('todos', values).then((response: ResolvedData) => {
+            const body = { title: values.title, status: Status.Pending}
+            createItem('todos', body).then((response: ResolvedData) => {
                 if(response.ok) {
                     handleSucessAction(true);
                 } else {
