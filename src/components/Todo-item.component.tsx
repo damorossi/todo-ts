@@ -4,7 +4,8 @@ import { DeleteOutlined } from '@ant-design/icons';
 
 import { deleteItem } from '../services/client-api.service';
 import TodoSelectComponent from './Todo-select-component';
-import { Status} from '../models';
+import TodoFormComponent from './Todo-form.component';
+import { Status } from '../models';
 
 import 'antd/dist/antd.css';
 import './todo-list.css';
@@ -19,26 +20,36 @@ interface InputPropFn {
 }
 
 const TodoItemComponent = ({title, id, status, handleParentSuccess, handleParentError}: InputPropFn ) => {
-  const [currentStatus, setCurrentStatus] = useState(status); 
+  const [currentStatus, setCurrentStatus] = useState(status);
+  const [editTodo, setEditTodo] = useState(false);
+
   const handleDelete = () => {
     deleteItem('todos', id).then(() => {
-        onHandleSuccess(true)
+        onHandleSuccess()
     }).catch(() => {
         handleParentError('Something went wrong, please contact Administrator');
 
     });
   }
 
-  function onHandleSuccess(shouldRefreshList: boolean): void {
-      handleParentSuccess(shouldRefreshList);
+    const handleDoubleClick = () => {
+        setEditTodo(true);
+    }
+
+  function onHandleSuccess(): void {
+      handleParentSuccess(true);
     }
     
     function onHandleSuccessUpdate(status: Status): void {
         setCurrentStatus(status);
-        onHandleSuccess(false);
+        onHandleSuccess();
     }
-  const todoSelect = (
-        <TodoSelectComponent  onHandleSucessAction={(shouldRefreshList) => onHandleSuccessUpdate(shouldRefreshList)} onHandleErrorAction={handleParentError} title={title!} id={id!} status={status!} />
+
+    function handleUpdateSuccess() {
+        onHandleSuccess();
+    }
+    const todoSelect = (
+        <TodoSelectComponent  onHandleSucessAction={onHandleSuccessUpdate} onHandleErrorAction={handleParentError} title={title!} id={id!} status={status!} />
     );
 
     const deleteButton = (
@@ -51,17 +62,24 @@ const TodoItemComponent = ({title, id, status, handleParentSuccess, handleParent
             <Button type="primary" shape="circle" danger icon={<DeleteOutlined />} />
         </Popconfirm>
     );
+    
 
+    const form = <TodoFormComponent
+              handleErrorAction={(error: string) => handleParentError(error)} todo={{title, id, status}}
+              handleCancelAction={() => setEditTodo(false)} handleSucessAction={(val)=> handleUpdateSuccess() }
+          />;
     const section = (
         <div className={`todo__item--${currentStatus}`}>
             <Row>
-                <Col span={13}  >
-                   { title }
+                <Col span={10}  >
+                    {editTodo ? form : 
+                        <span onDoubleClick={ handleDoubleClick } >{ title }</span>
+                    }
                 </Col>
-                <Col span={8} >
+                <Col span={10} >
                    { todoSelect }
                 </Col>
-                <Col span={1}>
+                <Col span={2}>
                     {deleteButton}
                 </Col>
             </Row>

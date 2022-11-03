@@ -19,6 +19,7 @@ export interface ResolvedData {
 }
 
 export interface PropsFormInput {
+    todo?: Partial<Todo>;
     handleSucessAction: (refreshList: boolean) => void;
     handleCancelAction: () => void;
     handleErrorAction: (error: string) => void;

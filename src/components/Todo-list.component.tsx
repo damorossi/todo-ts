@@ -32,12 +32,8 @@ const TodoListComponent = ({ handleSucessAction, handleErrorAction }: InputProps
 		setIsLoading(false);
 	}, []);
 	
-	function onHandleSuccessRequest(refreshList: boolean) {
-		handleSucessAction(refreshList);
-		if(refreshList) {
-			setTodos([]);
-			handlePagination(0);
-		}
+	function onHandleSuccessRequest() {
+		handlePagination(0);
 	}
 	
 	function handleFetch(page: number) {
@@ -67,7 +63,7 @@ const TodoListComponent = ({ handleSucessAction, handleErrorAction }: InputProps
 		<TodoItemComponent title={title!}
 			status={status!}
 			id={id!}
-			handleParentSuccess={(shouldRefreshList) => onHandleSuccessRequest(shouldRefreshList)}
+			handleParentSuccess={onHandleSuccessRequest}
 			handleParentError={handleErrorAction} key={`${title}-${id}-${index}`}/>
 		)
 	);

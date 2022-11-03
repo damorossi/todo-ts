@@ -1,35 +1,59 @@
 import { useState } from 'react'
 import { Button, Form, Input, Spin } from 'antd';
 
-import { createItem } from '../services/client-api.service';
-import { PropsFormInput, ResolvedData } from '../models';
+import { createItem, updateItem } from '../services/client-api.service';
+import { PropsFormInput, ResolvedData, Todo } from '../models';
 
 import './todo-create.css';
 
 type LayoutType = Parameters<typeof Form>[0]['layout'];
 
-function TodoFormComponent({handleSucessAction, handleCancelAction, handleErrorAction }: PropsFormInput)  {
+function TodoFormComponent({handleSucessAction, handleCancelAction, handleErrorAction, todo }: PropsFormInput)  {
     const [form] = Form.useForm();
     const [formLayout, setFormLayout] = useState<LayoutType>('vertical');
     const [isLoading, setIsLoading] = useState(false);
+
 
     const onFormLayoutChange = (form: any) => {
         setFormLayout(form);
     };
 
-    const onFinish = (values: {}) => {
-        setIsLoading(true);
-        createItem('todos', values).then((response: ResolvedData) => {
+    const updateElement = (updatedTodo: any) => {
+        let body = {...updatedTodo};
+        debugger;
+        updateItem('todos', updatedTodo?.id!, body).then((response: ResolvedData) => {
             if(response.ok) {
-                handleSucessAction(true);
+                handleSucessAction(true); 
             } else {
-                handleErrorAction('Something went wrong. Please review the data');
+                debugger
+                handleErrorAction(response?.msg!);
             }
             setIsLoading(false);
-        }).catch(error => {
-            handleErrorAction(error.msg);
-            setIsLoading(false);
         })
+    }
+
+    const onFinish = (values: {title: string}) => {
+        if(todo) {
+            debugger;
+            let newTodo = {...todo};
+            newTodo.title = values.title;
+            updateElement(newTodo);
+        }
+
+        setIsLoading(true);
+        if(!todo) {
+            createItem('todos', values).then((response: ResolvedData) => {
+                if(response.ok) {
+                    handleSucessAction(true);
+                } else {
+                    handleErrorAction('Something went wrong. Please review the data');
+                }
+                setIsLoading(false);
+            }).catch(error => {
+                handleErrorAction(error.msg);
+                setIsLoading(false);
+            })
+        }
     };
 
     return (
@@ -43,7 +67,7 @@ function TodoFormComponent({handleSucessAction, handleCancelAction, handleErrorA
                     onFinish={onFinish}
                 >
                     <Form.Item label="Todo"  name="title" rules={[{ required: true }]}>
-                        <Input placeholder="input placeholder" />
+                        <Input placeholder="Title for your new todo" defaultValue={todo?.title ||  ''} />
                     </Form.Item>
                     <Form.Item >
                         <Button type="primary" htmlType="submit">
