@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { ResolvedData, SelectValueTypes, Status } from '../models';
 import { Select, Spin } from 'antd';
+
+import { ResolvedData, SelectValueTypes, Status } from '../models';
 import { updateItem } from '../services/client-api.service';
 
 const { Option } = Select;
@@ -20,7 +21,7 @@ const TodoSelectComponent = ({title, status, id, onHandleSucessAction, onHandleE
         setIsLoading(true);
         const objectFromSelect = obj as SelectValueTypes;
         objectFromSelect.value = status;
-        const body = {title, status, id}
+        const body = {title, status, id};
 
         updateItem('todos', id, body).then((response: ResolvedData) => {
             if(response.ok) {

@@ -14,7 +14,7 @@ type InputProps = {
 	handleErrorAction: (error: string) => void;
 }
 
-const TodoListComponent = ({ handleErrorAction }: InputProps) => {
+const TodoListComponent = ({ handleErrorAction, handleSucessAction }: InputProps) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [currentPage, setCurrentPage] = useState(0);
 	const [totalRows, setTotalRows] = useState(0);
@@ -33,6 +33,7 @@ const TodoListComponent = ({ handleErrorAction }: InputProps) => {
 	}, []);
 	
 	function onHandleSuccessRequest() {
+		handleSucessAction(true);
 		handlePagination(0);
 	}
 	

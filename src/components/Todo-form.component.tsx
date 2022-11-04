@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Button, Form, Input, Spin } from 'antd';
 
 import { createItem, updateItem } from '../services/client-api.service';
-import { PropsFormInput, ResolvedData, Status, Todo } from '../models';
+import { PropsFormInput, ResolvedData, Status } from '../models';
 
 import './todo-create.css';
 

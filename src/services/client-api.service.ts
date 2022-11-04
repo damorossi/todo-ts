@@ -40,7 +40,9 @@ const updateItem = async (url: string, id: number, body: Todo): Promise<Resolved
 const deleteItem = async (url: string, id: number): Promise<ResolvedData> => {
     const endpoint = `${BASE_API_URL}/${url}/${id}`;
     const response = await axios.delete(endpoint)
-        .then(res => res.data.data)
+        .then(res => {
+            return res.data;
+        })
         .catch(function (error) {
             return error.response.data;
         }
