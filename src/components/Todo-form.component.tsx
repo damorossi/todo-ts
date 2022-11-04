@@ -60,12 +60,12 @@ function TodoFormComponent({handleSucessAction, handleCancelAction, handleErrorA
                 <Form
                     layout={formLayout}
                     form={form}
-                    initialValues={{ layout: formLayout }}
+                    initialValues={{ layout: formLayout, title: todo?.title }}
                     onValuesChange={onFormLayoutChange}
                     onFinish={onFinish}
                 >
                     <Form.Item label="Todo"  name="title" rules={[{ required: true }]}>
-                        <Input placeholder="Title for your new todo" defaultValue={todo?.title ||  ''} />
+                        <Input placeholder="Title for your new todo" />
                     </Form.Item>
                     <Form.Item >
                         <Button type="primary" htmlType="submit">
