@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { SetStateAction, useState } from 'react'
 import { Button, Form, Input, Spin } from 'antd';
 
 import { createItem, updateItem } from '../services/client-api.service';
-import { PropsFormInput, ResolvedData, Status } from '../models';
+import { PropsFormInput, ResolvedData, Status, Todo } from '../models';
 
 import './todo-create.css';
+import { FormLayout } from 'antd/lib/form/Form';
 
 type LayoutType = Parameters<typeof Form>[0]['layout'];
 
@@ -14,11 +15,11 @@ function TodoFormComponent({handleSucessAction, handleCancelAction, handleErrorA
     const [isLoading, setIsLoading] = useState(false);
 
 
-    const onFormLayoutChange = (form: any) => {
+    const onFormLayoutChange = (form: SetStateAction<FormLayout | undefined>) => {
         setFormLayout(form);
     };
 
-    const updateElement = (updatedTodo: any) => {
+    const updateElement = (updatedTodo: Todo) => {
         let body = {...updatedTodo};
         updateItem('todos', updatedTodo?.id!, body).then((response: ResolvedData) => {
             if(response.ok) {
@@ -53,6 +54,7 @@ function TodoFormComponent({handleSucessAction, handleCancelAction, handleErrorA
             })
         }
     };
+
     const classFormContainer = todo ? 'form__container--modal' : 'form__container';
     return (
         <section className={classFormContainer}>

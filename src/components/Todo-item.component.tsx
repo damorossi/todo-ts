@@ -71,17 +71,17 @@ const TodoItemComponent = ({title, id, status, handleParentSuccess, handleParent
     const section = (
         <div className={`todo__item todo__item--${currentStatus}`}>
             <Row>
-                <Col span={10}  >
+                <Col span={8}  >
                     {editTodo ? form : 
                          <Tooltip placement="left" title="Double click to Edit">
                             <span onDoubleClick={ handleDoubleClick } >{ title }</span>
                         </Tooltip>
                     }
                 </Col>
-                <Col span={10} >
+                <Col span={11} >
                    { todoSelect }
                 </Col>
-                <Col span={2}>
+                <Col span={3}>
                     {deleteButton}
                 </Col>
             </Row>
